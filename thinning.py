@@ -1,6 +1,6 @@
 """ thinning the map to get the skeleton"""
+import sys
 import numpy as np
-import matplotlib.pyplot as plt
 
 def A (grid, point):
     a = 0
@@ -63,16 +63,10 @@ def thinning (grid):
         if c == 0:
             return grid
 
-def showimg (data):
-    plt.gray ()
-    plt.imshow (data[::-1, :])
-    plt.show ()
-
-
-def test ():
-    grid = np.genfromtxt ('filtered.txt')
+if __name__ == "__main__":
+    grid = np.genfromtxt (sys.stdin)
     w, h = grid.shape
-    sep = 100
+    #sep = 100
     #grid[grid < sep] = 0
     #grid[grid >= sep] = 1
     grid[grid > 0] = 1
@@ -80,22 +74,7 @@ def test ():
     grid[w - 1, :] = 0
     grid[:, 0] = 0
     grid[:, h - 1] = 0
-    """import sys
-    import csv
-    reader = csv.reader (sys.stdin)
-    rawdata = []
-    line = 0
-    for row in reader:
-        line += 1
-        for d in row:
-            rawdata.append (d)
 
-    data = np.array(rawdata)
-    data.reshape ((
-    """
     thinning (grid)
-    showimg (grid)
+    np.savetxt (sys.stdout, grid, fmt = '%d')
 
-
-if __name__ == "__main__":
-    test ()
