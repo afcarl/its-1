@@ -35,6 +35,11 @@ def B (grid, point):
 def thinning (grid):
     width, height = grid.shape
     while True:
+# add for filter single point
+        for x in range (1, width - 1):
+            for y in range (1, height - 1):
+                if B (grid, (x, y)) < 1:
+                    grid[x, y] = 0
         c = 0
         for x in range (1, width - 1):
             for y in range (1, height - 1):
@@ -65,11 +70,12 @@ def showimg (data):
 
 
 def test ():
-    grid = np.genfromtxt ('gridcdata.txt')
+    grid = np.genfromtxt ('filtered.txt')
     w, h = grid.shape
     sep = 100
-    grid[grid < sep] = 0
-    grid[grid >= sep] = 1
+    #grid[grid < sep] = 0
+    #grid[grid >= sep] = 1
+    grid[grid > 0] = 1
     grid[0,:] = 0
     grid[w - 1, :] = 0
     grid[:, 0] = 0
