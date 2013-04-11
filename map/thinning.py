@@ -95,6 +95,24 @@ def islink (grid, point):
             return True
     return False
 
+def findneighbor (grid, point, line):
+    sx, sy = point
+    for x in range (sx - 1, sx + 2):
+        for y in range (sy - 1, sy + 2):
+            if grid[x, y] > 0 and (x, y) not in line:
+                return (x, y)
+
+def eatline (grid, point):
+    sx, sy = point
+    line = [(sx, sy)]
+    p = findneighbor (grid, point, line)
+    while nnei (grid , p) == 2:
+        line.append (p)
+        p = findneighbor (grid, p, line)
+    if nnei (grid, p) == 1:
+        for p in line:
+            grid[p] = 0
+
 def thinning (grid):
     width, height = grid.shape
     while True:
@@ -134,6 +152,8 @@ def clean (grid):
             if n == 0:
                 grid[cx, cy] = 0
                 count += 1
+            elif n == 1:
+                eatline (grid, (cx, cy))
             else: 
                 if not islink (grid, (cx, cy)):
                     grid[cx, cy] = 0
