@@ -47,26 +47,54 @@ def postnei (grid, point):
 
 
 def islink (grid, point):
-    nb = postnei (grid, point)
-    linknb = set ()
-    for n in nb:
-        linknb |= postnei (grid, n)
-    return nb <= linknb
-"""
-    if len (nb) == 0:
-        return False
-    linknb = []
-    n = nb[0]
-    linknb.append (n)
-    for n in nb:
-        for ln in linknb:
-            if n in postnei (nb):
-                linknb.append (n)
-    if len (linknb) == len (nb):
-        return True
+    link = np.zeros (8, dtype = np.bool)    
+    neighbor = np.zeros (8, dtype = np.bool)
+    x, y = point
+    if grid[x - 1, y - 1] > 0:
+        neighbor[0] = True
+        link[1] = True
+        link[7] = True
+    if grid[x - 1, y] > 0:
+        neighbor[1] = True
+        link[0] = True
+        link[2] = True
+        link[7] = True
+        link[3] = True
+    if grid[x - 1, y + 1] > 0:
+        neighbor[2] = True
+        link[1] = True
+        link[3] = True
+    if grid[x, y + 1] > 0:
+        neighbor [3] = True
+        link[2] = True
+        link[4] = True
+        link[1] = True
+        link[5] = True
+    if grid[x + 1, y + 1] > 0:
+        neighbor [4] = True
+        link[3] = True
+        link[5] = True
+    if grid[x + 1, y] > 0:
+        neighbor [5] = True
+        link[3] = True
+        link[4] = True
+        link[6] = True
+        link[7] = True
+    if grid[x + 1, y - 1] > 0:
+        neighbor [6] = True
+        link[5] = True
+        link[7] = True
+    if grid[x, y - 1] > 0:
+        neighbor [7] = True
+        link[5] = True
+        link[6] = True
+        link[0] = True
+        link[1] = True
+    for i in range (8):
+        if neighbor[i] and not link[i]:
+            return True
     return False
-"""
-    
+
 def thinning (grid):
     width, height = grid.shape
     while True:
@@ -98,15 +126,15 @@ def thinning (grid):
 def clean (grid):
     count = 0
     width, height = grid.shape
-    for cx in range (1, width):
-        for cy in range (1, height):
+    for cx in range (1, width - 1):
+        for cy in range (1, height - 1):
             if grid[cx, cy] == 0:
                 continue
             n = nnei (grid, (cx, cy))
             if n == 0:
                 grid[cx, cy] = 0
                 count += 1
-            elif 3 >= n > 1: 
+            else: 
                 if not islink (grid, (cx, cy)):
                     grid[cx, cy] = 0
                     count += 1
