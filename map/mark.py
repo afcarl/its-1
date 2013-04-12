@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 
-cross = sys.maxint
+cross = 0 
 
 def neighbor (grid, cx, cy):
     n = 0
@@ -14,15 +14,23 @@ def neighbor (grid, cx, cy):
     return n
 
 def mark (grid, roadmap, x, y, roadid):
-    if grid [x, y] == 0:
+    if grid [x, y] == 0 or roadmap[x, y] != 0:
         return
     n = neighbor (grid, x, y)
-    if n == 0 or roadmap[x, y] != 0:
+    if n == 0:
+        return
+    if n == 1:
+        roadmap[x, y] = roadid
         return
     if n >= 3:
-        roadmap[x, y] = sys.maxint
+        roadmap[x, y] = roadid
         return
     roadmap[x, y] = roadid
+
+    mark (grid, roadmap, x - 1, y - 1, roadid)
+    mark (grid, roadmap, x - 1, y, roadid)
+    mark (grid, roadmap, x - 1, y + 1, roadid)
+    mark (grid, roadmap, x, y - 1, roadid)
     mark (grid, roadmap, x, y + 1, roadid)
     mark (grid, roadmap, x + 1, y - 1, roadid)
     mark (grid, roadmap, x + 1, y, roadid)
@@ -34,7 +42,7 @@ def markroad (grid):
     roadid = 1
     while not it.finished:
         x, y = it.multi_index
-        if it[0] != 0:
+        if it[0] != 0 and roadmap[x, y] == 0:
             mark (grid, roadmap, x, y, roadid)
             roadid += 1
         it.iternext ()
