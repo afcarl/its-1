@@ -15,10 +15,25 @@ def areafilter (data):
             mean = area.mean ()
             area[area < mean] = 0
     return data
+def coverfilter (data):
+    sep = 0.3
+    width, height = data.shape
+    delete = np.zeros (data.shape, dtype = np.bool)
+    for x in range (1, width - 1):
+        for y in range (1, height - 1):
+            if data[x, y] == 0:
+                continue
+            for i in range (x - 1, x + 2):
+                for j in range (y - 1, y + 2):
+                    if data[i, j] < data[x, y] * sep :
+                        delete[i, j] = True
+
+    data[delete] = 0
+    return data
 
 if __name__ == '__main__':
     import sys
     data = np.genfromtxt (sys.stdin)
-    data = logfilter (data)
+    data = coverfilter (data)
     np.savetxt (sys.stdout, data, fmt = '%d')
 
