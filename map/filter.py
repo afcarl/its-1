@@ -1,3 +1,6 @@
+#! /usr/bin/python
+
+
 import numpy as np
 
 def logfilter (data):

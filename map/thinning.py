@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 """ thinning the map to get the skeleton"""
 import sys
 import numpy as np

@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import sys
 import csv
 import numpy as np

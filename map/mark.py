@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import numpy as np
 import sys
 
@@ -5,16 +7,19 @@ cross = 0
 
 def neighbor (grid, cx, cy):
     n = 0
+    width, height = grid.shape
     if grid[cx, cy] > 0:
         n -= 1
     for x in range (cx - 1, cx + 2):
         for y in range (cy - 1, cy + 2):
-            if grid[x, y] > 0:
+            if 0 <= x < width and 0 <= y < height and grid[x, y] > 0:
                 n += 1
     return n
 
 def mark (grid, roadmap, x, y, roadid):
-    if grid [x, y] == 0 or roadmap[x, y] != 0:
+    width, height = grid.shape
+    if not (0 <= x < width and 0 <= y < height) \
+        or grid [x, y] == 0 or roadmap[x, y] != 0:
         return
     n = neighbor (grid, x, y)
     if n == 0:
@@ -46,7 +51,6 @@ def markroad (grid):
             mark (grid, roadmap, x, y, roadid)
             roadid += 1
         it.iternext ()
-    print roadid
     return roadmap
 
 if __name__ == '__main__':
