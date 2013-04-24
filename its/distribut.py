@@ -6,7 +6,7 @@ def static_distribution ():
     pswCnt = Counter ()
     reader = csv.reader (sys.stdin)
     for row in reader:
-        for i in range (7, len (row), 2):
+        for i in range (8, len (row), 2):
             pswCnt[row[i]] += 1
     return pswCnt
 
