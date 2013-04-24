@@ -1,6 +1,6 @@
 import sys
 import csv
-from its.gridmap.grid import gridid
+from grid import gridid
 
 class Path:
     def __init__(self, car, stime, sgrid):
