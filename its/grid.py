@@ -12,8 +12,8 @@ some config about grid
 
 # min latitude and gratitue
 # data beyond this range will be ignored
-MINX = 116.22
-MINY = 39.80
+MINX = 116.23
+MINY = 39.78
 # number of grid x and y
 NX = 512
 NY = 512
@@ -22,12 +22,14 @@ DELTAX = 0.0005859#0.0011#0.00055
 DELTAY = 0.0004992#0.0009#0.00045
 MAXX = MINX + NX * DELTAX
 MAXY = MINY + NY * DELTAY
-
+rate = 1.0 / 1024 / 3600
 def gridid (x, y):
+    x = x * rate
+    y = y * rate
     if not (MINX <= x < MAXX) or not (MINY <= y < MAXY):
-        return None
-    ix = int ((x - MINX) // DELTAX)
-    iy = int ((y - MINY) // DELTAY)
+        return (0, 0)
+    ix = int ((x - MINX) / DELTAX)
+    iy = int ((y - MINY) / DELTAY)
     return (ix, iy)
 
 def gridcdata ():
@@ -37,11 +39,11 @@ def gridcdata ():
         if len (row) < 9:
             continue
         v = int (row[8])
-        if v == 0:
+        status = int (row[10])
+        if v == 0 or status != 1:
             continue
-        gid = gridid (float (row[4]), float (row[5]))
-        if gid:
-            grids[gid] += 1
+        gid = gridid (int (row[6]), int (row[7]))
+        grids[gid] += 1
     np.savetxt (sys.stdout, grids, fmt = '%d')
 
 if __name__ == '__main__':
