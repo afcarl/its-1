@@ -7,20 +7,21 @@ import numpy as np
 """
 some config about grid
 """
+# dj * 100 / dx = 0.0011718
+# dw * 100 / dy = 0.0008984
+
 # min latitude and gratitue
 # data beyond this range will be ignored
 MINX = 116.22
 MINY = 39.80
-MAXX = 116.54
-MAXY = 40.00
-
-# delta latitue and gratitude 
-DELTAX = 0.0011#0.00055
-DELTAY = 0.0009#0.00045
-
 # number of grid x and y
-NX = int ((MAXX - MINX) / DELTAX + 1)
-NY = int ((MAXY - MINY) / DELTAY + 1)
+NX = 512
+NY = 512
+# delta latitue and gratitude 
+DELTAX = 0.0005859#0.0011#0.00055
+DELTAY = 0.0004992#0.0009#0.00045
+MAXX = MINX + NX * DELTAX
+MAXY = MINY + NY * DELTAY
 
 def gridid (x, y):
     if not (MINX <= x < MAXX) or not (MINY <= y < MAXY):
