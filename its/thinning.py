@@ -52,6 +52,9 @@ def islink (grid, point):
     link = np.zeros (8, dtype = np.bool)    
     neighbor = np.zeros (8, dtype = np.bool)
     x, y = point
+    width, height = grid.shape
+    if not ( 0 < x < width - 1 and 0 < y < height - 1):
+        return False
     if grid[x - 1, y - 1] > 0:
         neighbor[0] = True
         link[1] = True
@@ -110,10 +113,23 @@ def eatline (grid, point):
     p = findneighbor (grid, point, line)
     while nnei (grid , p) == 2:
         line.append (p)
+        if len (line) > 10:
+            return
         p = findneighbor (grid, p, line)
-    if nnei (grid, p) == 1:
-        for p in line:
-            grid[p] = 0
+    for p in line:
+        grid[p] = 0
+    """
+    else:
+        for d in line:
+            grid[d] = 0
+        grid[p] = 0
+        for x in range (p[0] - 1, p[0] + 2):
+            for y in range (p[1] - 1, p[1] + 2):
+                if islink (grid, (x, y)):
+                    grid[x,y] = 1
+    """
+
+
 
 def thinning (grid):
     width, height = grid.shape

@@ -21,22 +21,27 @@ def logfilter (data):
 
 def areafilter (data):
     width, height = data.shape
-
-    for x in range (0, width, 8):
-        for y in range (0, height, 8):
-            area = data[x:x + 8, y:y + 8]
+    size = 16
+    for x in range (0, width, size):
+        for y in range (0, height, size):
+            area = data[x:x + size, y:y + size]
             mean = area.mean ()
             area[area < mean] = 0
     return data
+
 def gradient_filter (data):
     width, height = data.shape
-    grad = np.zeros (data.shape)
+    grad = np.zeros (data.shape, dtype = np.float)
     for x in range (1, width - 1):
         for y in range (1, height - 1):
+            if data[x, y] == 0:
+                continue
             area = data[x - 1: x + 2, y - 1:y + 2]
             m = area.max ()
             grad [x, y] = (m - data[x, y]) / data[x, y]
-    return grad
+    data [grad > 2] = 0
+    return data
+
 def coverfilter (data):
     sep = 0.3
     width, height = data.shape
@@ -76,6 +81,6 @@ def coverfilter (data):
 if __name__ == '__main__':
     import sys
     data = np.genfromtxt (sys.stdin)
-    data = gradient_filter (data)
+    data = areafilter (data)
     np.savetxt (sys.stdout, data, fmt = '%d')
 
