@@ -23,6 +23,7 @@ DELTAY = 0.0004992#0.0009#0.00045
 MAXX = MINX + NX * DELTAX
 MAXY = MINY + NY * DELTAY
 rate = 1.0 / 1024 / 3600
+
 def gridid (x, y):
     x = x * rate
     y = y * rate
@@ -36,7 +37,7 @@ def gridcdata ():
     grids = np.zeros ((NX, NY), dtype = np.int32)
     reader = csv.reader (sys.stdin)
     for row in reader:
-        if len (row) < 9:
+        if len (row) != 13:
             continue
         v = int (row[8])
         status = int (row[10])

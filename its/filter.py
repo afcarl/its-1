@@ -13,6 +13,31 @@ def nnei (grid, point):
                 b += (grid[x, y] > 0)
     return b - (grid[cx, cy] > 0)
 
+def two_means (data):
+    from scipy.cluster.vq import vq, kmeans, whiten
+    mean = data.mean ()
+    data[data > mean] = mean
+    feature = data.reshape (data.size, 1)
+    whitened = whiten (feature)
+    book, distortion = kmeans (whitened, 2)
+    book = book.reshape (1, book.size)
+    book.sort ()
+    book = book.reshape (book.size, 1)
+    label, distort = vq (whitened, book)
+    label = label.reshape (data.shape)
+    data[:, :] = label
+
+def two_means_filter (data):
+    data = data
+    size = 512
+    width, height = data.shape
+    for x in range (0, width, size):
+        for y in range (0, height, size):
+            if data.std () == 0:
+                data[:,:] = 0
+            two_means (data[x:x + size, y:y + size])
+    return data
+
 def logfilter (data):
     sep = np.log (data.mean () + 1)
     data = np.log (data + 1)
@@ -21,7 +46,7 @@ def logfilter (data):
 
 def areafilter (data):
     width, height = data.shape
-    size = 16
+    size = 64
     for x in range (0, width, size):
         for y in range (0, height, size):
             area = data[x:x + size, y:y + size]
@@ -81,6 +106,6 @@ def coverfilter (data):
 if __name__ == '__main__':
     import sys
     data = np.genfromtxt (sys.stdin)
-    data = areafilter (data)
+    data = two_means_filter (data)
     np.savetxt (sys.stdout, data, fmt = '%d')
 

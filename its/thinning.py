@@ -113,7 +113,7 @@ def eatline (grid, point):
     p = findneighbor (grid, point, line)
     while nnei (grid , p) == 2:
         line.append (p)
-        if len (line) > 10:
+        if len (line) > 4:
             return
         p = findneighbor (grid, p, line)
     for p in line:
@@ -191,8 +191,10 @@ if __name__ == "__main__":
     grid[:, h - 1] = 0
 
     thinning (grid)
+    """
     n = clean (grid)
     while n > 0:
         n = clean (grid)
+    """
     np.savetxt (sys.stdout, grid, fmt = '%d')
 
