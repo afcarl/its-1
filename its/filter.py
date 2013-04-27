@@ -29,7 +29,7 @@ def two_means (data):
 
 def two_means_filter (data):
     data = data
-    size = 512
+    size = 32
     width, height = data.shape
     for x in range (0, width, size):
         for y in range (0, height, size):
@@ -106,6 +106,7 @@ def coverfilter (data):
 if __name__ == '__main__':
     import sys
     data = np.genfromtxt (sys.stdin)
+    data[0, 0] = 0
     data = two_means_filter (data)
     np.savetxt (sys.stdout, data, fmt = '%d')
 

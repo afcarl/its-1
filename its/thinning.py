@@ -158,6 +158,25 @@ def thinning (grid):
                         c += 1
         if c == 0:
             return grid
+def fix_missing (grid):
+    width, height = grid.shape
+    def test (p1, p2):
+        if not (grid[p1] > 0 and grid[p2] > 0):
+            return False
+        if nnei (grid, p1) != 1 or nnei (grid, p2) != 1:
+            return False
+        return True
+    for x in range (1, width - 1):
+        for y in range (1, height - 1):
+            if grid[x, y] != 0:
+                continue
+            if nnei (grid, (x, y)) < 2:
+                continue
+            if test ((x - 1, y - 1), (x + 1, y + 1)) or \
+               test ((x - 1, y + 1), (x + 1, y - 1)) or \
+               test ((x, y - 1), (x, y + 1)) or \
+               test ((x - 1, y), (x + 1, y)):
+                   grid[x, y] = 1
 
 def clean (grid):
     count = 0
@@ -191,6 +210,7 @@ if __name__ == "__main__":
     grid[:, h - 1] = 0
 
     thinning (grid)
+    fix_missing (grid)
     """
     n = clean (grid)
     while n > 0:
