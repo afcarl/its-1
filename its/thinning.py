@@ -45,13 +45,13 @@ def nnei (grid, point):
 def postnei (grid, point):
     cx, cy = point
     width, height = grid.shape
-    nei = set ()
+    nei = []
     for x in range (cx - 1, cx + 2):
         for y in range (cy - 1, cy + 2):
             if (x, y) == (cx, cy) or not (0 <= x < width) \
                 or not (0 <= y < height):
                 continue
-            nei.add ((x, y))
+            nei.append ((x, y))
     return nei
 
 
@@ -164,22 +164,31 @@ def thinning (grid):
                         grid[x, y] = 0
                         c += 1
         if c == 0:
-            return grid
-"""
+            break
+    for x in range (1, width - 1):
+        for y in range (1, width - 1):
+            if nnei (grid, (x, y)) < 3:
+                continue
+            if not islink (grid, (x, y)):
+                grid[x, y] = 0
+    return grid
 def fix_missing (grid):
     width, height = grid.shape
-    for x in range (0, width):
-        for y in range (0, height):
+    def single (x, y):
+        if grid[x, y] == 1 and nnei (grid, (x,y)) <= 1:
+            return True
+        return False
+    for x in range (1, width - 1):
+        for y in range (1, height - 1):
             if grid[x, y] == 1:
                 continue
-            if nnei (grid, (x, y)) < 2:
+            if nnei (grid, (x, y)) != 2:
                 continue
-            value = 0
-            for n in postnei (grid, (x, y)):
-                if nnei (grid, n) == 1:
-                    value = 1
-            grid[x, y] = value
-"""
+            if (single (x-1,y-1) and single (x+1,y+1)) or \
+                (single (x-1,y) and single (x+1, y)) or \
+                (single (x-1, y+1) and single (x+1, y-1)) or \
+                (single (x,y-1) and single (x,y+1)): 
+                grid[x, y] = 1
 
 def clean (grid):
     count = 0
@@ -213,6 +222,7 @@ if __name__ == "__main__":
     grid[:, h - 1] = 0
 
     thinning (grid)
+    fix_missing (grid)
     """
     n = clean (grid)
     while n > 0:
