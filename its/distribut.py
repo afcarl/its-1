@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import csv
 import sys
 from collections import Counter

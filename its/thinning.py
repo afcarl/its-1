@@ -26,7 +26,7 @@ def nseq (grid, point):
     return a
 
 def nnei (grid, point):
-    cx, cy = point
+    """cx, cy = point
     width, height = grid.shape
     b = 0
     for x in range (cx -1, cx + 2):
@@ -34,6 +34,13 @@ def nnei (grid, point):
             if 0 <= x < width and 0 <= y < height:
                 b += grid[x, y]
     return b - grid[cx, cy]
+    """
+    width, height = grid.shape
+    x, y = point
+    if 1 <= x < width - 1 and 1 <= y < height - 1:
+        return grid[x - 1: x + 2, y - 1 : y + 2].sum () - grid[x , y]
+    return 0
+
 
 def postnei (grid, point):
     cx, cy = point
@@ -158,25 +165,21 @@ def thinning (grid):
                         c += 1
         if c == 0:
             return grid
+"""
 def fix_missing (grid):
     width, height = grid.shape
-    def test (p1, p2):
-        if not (grid[p1] > 0 and grid[p2] > 0):
-            return False
-        if nnei (grid, p1) != 1 or nnei (grid, p2) != 1:
-            return False
-        return True
-    for x in range (1, width - 1):
-        for y in range (1, height - 1):
-            if grid[x, y] != 0:
+    for x in range (0, width):
+        for y in range (0, height):
+            if grid[x, y] == 1:
                 continue
             if nnei (grid, (x, y)) < 2:
                 continue
-            if test ((x - 1, y - 1), (x + 1, y + 1)) or \
-               test ((x - 1, y + 1), (x + 1, y - 1)) or \
-               test ((x, y - 1), (x, y + 1)) or \
-               test ((x - 1, y), (x + 1, y)):
-                   grid[x, y] = 1
+            value = 0
+            for n in postnei (grid, (x, y)):
+                if nnei (grid, n) == 1:
+                    value = 1
+            grid[x, y] = value
+"""
 
 def clean (grid):
     count = 0
@@ -210,7 +213,6 @@ if __name__ == "__main__":
     grid[:, h - 1] = 0
 
     thinning (grid)
-    fix_missing (grid)
     """
     n = clean (grid)
     while n > 0:
