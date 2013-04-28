@@ -57,12 +57,13 @@ def passway (grids, neighbor, point):
     cur = 0
     while cur < len (stack):
         x, y = stack[cur]
-        if grids[x, y]==1 and (neighbor [x, y] == 1 or neighbor[x,y] == 2):
+        if grids[x, y]==1:
             way.append ((x, y))
-            for i in range (x - 1, x + 2):
-                for j in range (y - 1, y + 2):
-                    if (i, j) not in stack:
-                        stack.append ((i, j))
+            if neighbor [x, y] == 1 or neighbor[x,y] == 2:
+                for i in range (x - 1, x + 2):
+                    for j in range (y - 1, y + 2):
+                        if (i, j) not in stack:
+                            stack.append ((i, j))
         cur += 1
     return way
 

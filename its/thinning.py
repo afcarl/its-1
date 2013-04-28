@@ -166,11 +166,14 @@ def thinning (grid):
         if c == 0:
             break
     for x in range (1, width - 1):
-        for y in range (1, width - 1):
-            if nnei (grid, (x, y)) < 3:
+        for y in range (1, height - 1):
+            if grid[x, y] == 0:
+                continue
+            if nnei (grid, (x, y)) < 2:
                 continue
             if not islink (grid, (x, y)):
-                grid[x, y] = 0
+                if grid[x-1,y]+grid[x+1,y]+grid[x,y-1]+grid[x,y+1] < 3:
+                    grid[x, y] = 0
     return grid
 def fix_missing (grid):
     width, height = grid.shape
