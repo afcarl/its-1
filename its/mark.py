@@ -3,8 +3,10 @@
 import numpy as np
 import sys
 
-cross = 0 
-
+BLANK = 0
+IGNORE = 1
+TURN = 2
+"""
 def neighbor (grid, cx, cy):
     n = 0
     width, height = grid.shape
@@ -15,7 +17,6 @@ def neighbor (grid, cx, cy):
             if 0 <= x < width and 0 <= y < height and grid[x, y] > 0:
                 n += 1
     return n
-
 def mark (grid, roadmap, x, y, roadid):
     width, height = grid.shape
     if not (0 <= x < width and 0 <= y < height) \
@@ -40,21 +41,62 @@ def mark (grid, roadmap, x, y, roadid):
     mark (grid, roadmap, x + 1, y - 1, roadid)
     mark (grid, roadmap, x + 1, y, roadid)
     mark (grid, roadmap, x + 1, y + 1, roadid)
-    
-def markroad (grid):
-    roadmap = np.zeros (grid.shape, dtype = np.int32)
-    it = np.nditer (grid, flags = ['multi_index'])
-    roadid = 1
-    while not it.finished:
-        x, y = it.multi_index
-        if it[0] != 0 and roadmap[x, y] == 0:
-            mark (grid, roadmap, x, y, roadid)
-            roadid += 1
-        it.iternext ()
+"""
+def neighbormap (grids):
+    width, height = grids.shape
+    nei = np.zeros (grids.shape, dtype = np.int32)
+    for x in range (1, width - 1):
+        for y in range (1, height - 1):
+            nei[x, y] = grids[x-1:x+2, y-1:y+2].sum() - grids[x,y]
+    return nei
+
+def passway (grids, neighbor, point):
+    stack = []
+    stack.append (point)
+    way = []
+    cur = 0
+    while cur < len (stack):
+        x, y = stack[cur]
+        if grids[x, y]==1 and (neighbor [x, y] == 1 or neighbor[x,y] == 2):
+            way.append ((x, y))
+            for i in range (x - 1, x + 2):
+                for j in range (y - 1, y + 2):
+                    if (i, j) not in stack:
+                        stack.append ((i, j))
+        cur += 1
+    return way
+
+
+def markroad (grids):
+    roadmap = np.zeros (grids.shape, dtype = np.int32)
+    neighbor = neighbormap(grids)
+    width, height = grids.shape
+    roadid = 10
+    for x in range (0, width):
+        for y in range (0, height):
+            if roadmap [x, y] > 0:
+                continue
+            if grids[x, y] == 0:
+                roadmap[x, y] == BLANK
+                continue
+            if neighbor [x, y] == 0:
+                roadmap[x, y] = IGNORE
+            elif neighbor [x, y] == 2 or neighbor [x, y] == 1:
+                way = passway (grids, neighbor,(x, y))
+                if len (way) < 4:
+                    m = IGNORE
+                else :
+                    m = roadid
+                    roadid += 1
+                for g in way:
+                    roadmap [g] = m
+            else:
+                roadmap [x, y] = TURN
+
     return roadmap
 
 if __name__ == '__main__':
-    grid = np.genfromtxt (sys.stdin, dtype = np.int32)
-    roadmap = markroad (grid)
+    grids = np.genfromtxt (sys.stdin, dtype = np.int32)
+    roadmap = markroad (grids)
     np.savetxt (sys.stdout, roadmap, fmt = '%d')
 
