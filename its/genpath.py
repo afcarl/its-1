@@ -1,6 +1,7 @@
 import sys
 import csv
 from grid import gridid
+import mark
 
 class Path:
     def __init__(self, car, stime, sgrid):
@@ -11,14 +12,8 @@ class Path:
         self.egrid = None
         self.passways = [] 
     def tolist (self):
-        return [self.car, str(self.sgrid[0]), str(self.sgrid[1]), self.stime, \
-            str(self.egrid[0]), str(self.egrid[1]), self.etime,] \
+        return [self.car, self.stime, self.sgrid, self.etime, self.egrid] \
             + [str (it) for it in self.passways]
-
-    def __str__ (self):
-        sp = ','.join ([self.car, self.stime, self.etime, 
-            str(len (self.passways))] + self.passways)
-        return sp
 
 def genpath (gmap):
     paths = {}
@@ -26,35 +21,29 @@ def genpath (gmap):
     reader = csv.reader (sys.stdin)
     writer = csv.writer (sys.stdout)
     for row in reader:
-        if len (row) < 5:
+        if len (row) != 13:
             continue
         car = row[2]
-        grid = gridid (float(row[4]), float(row[5]))
-        # not in our area
-        if not grid:
-            continue
+        grid = gridid (float(row[6]), float(row[7]))
         passway = gmap [grid]
-        # not in the grid map, ignore
-        if passway == 0:
-            continue
-        time = row[3]
+        time = row[3][8:12]
         # car is serving
         if row[10] == '1':
             if car in paths:
-                p = paths[car]
-                if p.passways[len (p.passways) - 1] == passway:
+                if passway < 10:
                     continue
-                else:
-                    p.passways.append (time[-6:])
-                    p.passways.append (passway)
+                pw = paths[car].passways
+                if len(pw) == 0 or pw[len(pw)-1] != passway:
+                    pw.append (passway)
             else:
-                paths[car] = Path (car, time, grid)
-                paths[car].passways.append (time[-6:])
+                start = str (grid[0]).zfill (3) + str(grid[1]).zfill(3)
+                paths[car] = Path (car, time, start)
                 paths[car].passways.append (passway)
         else:
             if car in paths:
                 paths[car].etime = time
-                paths[car].egrid = grid
+                end = str (grid[0]).zfill (3) + str(grid[1]).zfill(3)
+                paths[car].egrid = end
                 writer.writerow (paths[car].tolist ())
                 del paths[car]
 
