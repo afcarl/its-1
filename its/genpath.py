@@ -50,7 +50,7 @@ def genpath (gmap):
         if row[10] == '1':
             if car not in paths:
                 paths[car] = Path (car, time, grid)
-            elif delta_time (time, paths[car].lasttime) > config.MAXINTER:
+            elif delta_time (time, paths[car].etime) > config.MAXINTER:
                 writer.writerow (paths[car].tolist ())
                 paths[car] = Path (car, time, grid)
             if passway < 10:
@@ -61,7 +61,7 @@ def genpath (gmap):
                     passway = config.OTHER
             paths[car].passways.append (passway)
         elif car in paths:
-            if delta_time (time, paths[car].lasttime) <= config.MAXINTER:
+            if delta_time (time, paths[car].etime) <= config.MAXINTER:
                 paths[car].etime = time
                 paths[car].egrid = grid
             writer.writerow (paths[car].tolist ())
