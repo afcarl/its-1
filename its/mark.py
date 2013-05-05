@@ -84,7 +84,7 @@ def markroad (grids):
                 roadmap[x, y] = IGNORE
             elif neighbor [x, y] == 2 or neighbor [x, y] == 1:
                 way = passway (grids, neighbor,(x, y))
-                if len (way) < 4:
+                if len (way) < 3:
                     m = IGNORE
                 else :
                     m = roadid

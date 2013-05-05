@@ -19,7 +19,7 @@ def two_means (data):
     data[data > mean] = mean
     feature = data.reshape (data.size, 1)
     whitened = whiten (feature)
-    book, distortion = kmeans (whitened, 2)
+    book, distortion = kmeans (whitened, 3)
     book = book.reshape (1, book.size)
     book.sort ()
     book = book.reshape (book.size, 1)
@@ -29,13 +29,14 @@ def two_means (data):
 
 def two_means_filter (data):
     data = data
-    size = 32
+    size = 512
     width, height = data.shape
     for x in range (0, width, size):
         for y in range (0, height, size):
             if data.std () == 0:
                 data[:,:] = 0
             two_means (data[x:x + size, y:y + size])
+    data[data > 0] = 1
     return data
 
 def logfilter (data):
