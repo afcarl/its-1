@@ -11,10 +11,15 @@ def shadowmark (entity):
                 continue
             for i in range (x - 1, x + 2):
                 for j in range (y - 1, y + 2):
-                    if shadow[i,j] == 0:
+                    if entity[i, j] == mark.TURN:
+                        for k in range (i - 1, i+2):
+                            for m in range (j - 1, j + 2):
+                                shadow[k, m] = mark.TURN
+                    elif shadow[i,j] == 0:
                         shadow[i,j] = entity[x,y]
                     elif entity[i,j] == 0 and shadow[i,j] != entity[x,y]:
                         shadow[i,j] = mark.IGNORE
+
     return shadow
 
 if __name__ == '__main__':

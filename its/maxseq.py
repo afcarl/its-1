@@ -1,7 +1,7 @@
 import csv
 import sys
-prob = [0] * 3010
-prev = [0] * 3010
+prob = [0] * 4000
+prev = [0] * 4000
 TRANS = dict ()
 def gen_path (start, end):
     prob[start] = 1.0
