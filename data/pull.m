@@ -1,6 +1,5 @@
 function pull (gray, bw)
 close all;
-imtool (gray);
 map = bw;
 for i = 2:size (bw,1) -1
     for j = 2:size(bw,2) -1
@@ -16,7 +15,14 @@ for i = 2:size (bw,1) -1
         end
     end
 end
-figure,imshow (map);
+cc = bwconncomp (map);
+labeled = labelmatrix(cc);
+map = labeled == 1;
+
+%RGB_label = label2rgb(labeled, @copper, 'c', 'shuffle');
+%imshow(RGB_label,'InitialMagnification','fit');
+
+%% push down low pixels
 bw = map;
 for i = 2:size (bw,1) -1
     for j = 2:size(bw,2) -1
@@ -33,6 +39,8 @@ for i = 2:size (bw,1) -1
     end
 end
 figure,imshow (map);
+
+%% push up high pixels
 bw=map;
 for i = 2:size (bw,1) -1
     for j = 2:size(bw,2) -1
