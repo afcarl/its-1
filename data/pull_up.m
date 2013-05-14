@@ -1,12 +1,12 @@
-function map = pull_up (bw, gray, rate)
-    map = bw;   
-    used = zeros (size (bw));
+function map = pull_up (remain, down, gray, rate)
+    map = remain;   
+    used = zeros (size (remain));
     change = 1;
     while change ~= 0
         change = 0;
-        for i = 2:size (bw,1) -1
-            for j = 2:size(bw,2) -1
-                if bw(i,j) == 0 || used (i, j) == 1
+        for i = 2:size (remain,1) -1
+            for j = 2:size(remain,2) -1
+                if remain(i,j) == 0 || used (i, j) == 1
                     continue
                 end
                 maxv = 0;
@@ -14,7 +14,8 @@ function map = pull_up (bw, gray, rate)
                 maxy = 0;
                 for x = i-1:i+1
                     for y = j-1:j+1
-                        if gray (x, y) > gray(i,j) * rate && map (x, y) == 0
+                        if gray (x, y) > gray(i,j) * rate && ...
+                                map (x, y) == 0 && down(x,y) == 1
                             if gray (x, y) > maxv
                                 maxx = x;
                                 maxy = y;
@@ -30,6 +31,6 @@ function map = pull_up (bw, gray, rate)
                 end
             end
         end
-        rate = rate * 1.05;
+        %rate = rate * 1.05;
     end
 end
