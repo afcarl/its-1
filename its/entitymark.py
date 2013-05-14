@@ -6,20 +6,18 @@ import sys
 def markentity (entity, roadmap):
     entitymap = np.array (roadmap)
     width, height = entity.shape
-    change = 1
-    while change > 0:
-        change = 0
-        for x in range(1, width - 1):
-            for y in range(1, height - 1):
-                if entity[x, y] == 0 or entitymap[x,y] != 0:
-                    continue
-                maxnei = 0
-                for i in range (x - 1, x + 2):
-                    for j in range (y - 1, y + 2):
-                        if entitymap [i, j] > 0 and entity[i, j] > maxnei:
-                            maxnei = entitymap[i, j]
-                            change += 1
-                entitymap[x, y] = maxnei
+    for x in range(1, width - 1):
+        for y in range(1, height - 1):
+            if entity[x, y] == 0 or entitymap[x,y] != 0:
+                continue
+            m = 2000000
+            for i in range (x - 1, x + 2):
+                for j in range (y - 1, y + 2):
+                    if m > roadmap [i, j] > 0:
+                        m = roadmap [i, j]
+                    
+            if m > 0:
+                entitymap [x, y] = m
     return entitymap
 
 if __name__ == '__main__':
