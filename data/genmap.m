@@ -64,7 +64,8 @@ function bw = genmap ()
         end
     end
     %bw = connect_labeled (labeled, gray);
-    bw = L;
+    bw = L > 0;
+    bw = lineup (bw, gray);
     %bw = labeled == 1;
     %RGB_label = label2rgb(labeled, @copper, 'c', 'shuffle');
     %imshow(RGB_label,'InitialMagnification','fit');
