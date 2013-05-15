@@ -1,5 +1,6 @@
 import csv
 import sys
+from direction import direction, center
 prob = [0] * 8000
 prev = [0] * 8000
 TRANS = dict ()
@@ -10,7 +11,10 @@ def gen_path (start, end):
     while change:
         change = False
         for tran, p in TRANS.items ():
-            a, b = tran
+            a, d, b = tran
+            if direction (center[a], center[end]) != d:
+                #print direction (center[a], center[end]), d
+                continue
             if prob[b] < prob[a] * p:
                 prob[b] = prob[a] * p
                 prev[b] = a
@@ -30,5 +34,6 @@ if __name__ == '__main__':
     reader = csv.reader (sys.stdin)
     writer = csv.writer (sys.stdout)
     for row in reader:
-        TRANS[int(row[0]), int(row[1])] = float (row[2])
+        TRANS[int(row[0]), int(row[1]), int(row[2])] = float (row[3])
     writer.writerow (gen_path (start, end))
+
