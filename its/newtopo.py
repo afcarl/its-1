@@ -25,8 +25,8 @@ def topo (entity):
                     elif entity[k, m] < entity[i, j]:
                         topo.add ((entity[k, m], entity[i, j]))
     for a, b in topo:
-        print a, b
 
+        writer.writerow ([a, b])
 if __name__ == '__main__':
     entity = np.genfromtxt (sys.stdin, dtype = np.int32)
     topo (entity)

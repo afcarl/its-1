@@ -8,7 +8,21 @@ def markshadow (entity):
     width, height = entity.shape
     for x in range(1, width - 1):
         for y in range(1, height - 1):
-            if entity[x, y] == 0:
+            if entity[x, y] == 0 or entity[x, y] > 10000:
+                continue
+            for i in range (x - 1, x + 2):
+                for j in range (y - 1, y + 2):
+                    #if entity [i,j] > 0:
+                    #    continue
+                    if shadow [i,j] == 0 or entity[i, j] > 10000:
+                        shadow[i, j] = entity[x,y]
+                    elif shadow[i,j] == entity[x,y]:
+                        continue
+                    else:
+                        shadow[i, j] = WAIT
+    for x in range(1, width - 1):
+        for y in range(1, height - 1):
+            if entity[x, y] <= 10000:
                 continue
             for i in range (x - 1, x + 2):
                 for j in range (y - 1, y + 2):
@@ -16,12 +30,10 @@ def markshadow (entity):
                         continue
                     if shadow [i,j] == 0:
                         shadow[i, j] = entity[x,y]
-                    elif shadow[i,j] == entity[x,y]:
-                        continue
                     elif shadow[i,j] < 10000:
                         continue
-                    elif entity[i, j] < 10000:
-                        shadow[i, j] = entity[i,j]
+                    elif shadow[i,j] == entity[i, j]:
+                        continue
                     else:
                         shadow[i, j] = WAIT
     return shadow

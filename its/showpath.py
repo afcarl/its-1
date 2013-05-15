@@ -18,7 +18,7 @@ def showbmap (gmap, paths):
 if __name__ == '__main__':
     import sys
     fpaths = sys.argv[1]
-    gmap = np.genfromtxt ('data/entitymap.dat')
+    gmap = np.genfromtxt ('data/finalmark.datx')
     paths = []
     for row in open (fpaths):
         paths.extend ([int(p) for p in row.split(',')])
