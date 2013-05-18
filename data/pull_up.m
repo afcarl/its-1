@@ -14,12 +14,17 @@ function map = pull_up (remain, down, gray, rate)
                 maxy = 0;
                 for x = i-1:i+1
                     for y = j-1:j+1
-                        if gray (x, y) > gray(i,j) * rate && ...
+                        if abs (x+y - i - j) == 1
+                            expand = 1.2;
+                        else
+                            expand = 1;
+                        end
+                        if expand * gray (x, y) >= gray(i,j) * rate && ...
                                 map (x, y) == 0 && down(x,y) == 1
-                            if gray (x, y) > maxv
+                            if expand * gray (x, y) > maxv
                                 maxx = x;
                                 maxy = y;
-                                maxv = gray (x, y);
+                                maxv = expand * gray (x, y);
                             end
                         end
                     end

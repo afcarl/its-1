@@ -1,10 +1,12 @@
 function bw = lineup (bw, gray)
 change = 1;
+used = zeros (size (bw), 'uint32');
+bw (bw > 0) = 1;
 while change == 1
     change = 0;
     for i = 2:size (bw, 1)-1
         for j = 2:size (bw, 2)-1
-            if bw (i,j) == 0
+            if bw (i,j) == 0 || used (i, j) == 1
                 continue
             end
             s = 0;
@@ -21,12 +23,23 @@ while change == 1
                     s = s + bw (x, y);
                 end
             end
-            if s ~= 2% #neighbor is not 1
-                continue
+            n = s - 1;% #neighbor
+            if n <= 1
+                rate = 0.4;
+            elseif n <= 2
+                rate = .9;
+            elseif n <= 3
+                rate = 1;
+            else
+                rate = 1;
             end
-            if maxv > gray (i, j) * 0.6
+            if maxv > gray (i, j) * rate
                 bw(maxx, maxy) = 1;
+                if maxv < gray (i, j)                    
+                    gray (maxx, maxy) = gray (i, j);
+                end
                 change = 1;
+                used (i, j) = 1;
             end
         end
     end

@@ -41,7 +41,7 @@ def gridcdata ():
             continue
         v = int (row[8])
         status = int (row[10])
-        if v == 0 or status != 1:
+        if v  < 5:
             continue
         gid = gridid (int (row[6]), int (row[7]))
         grids[gid] += 1
