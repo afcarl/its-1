@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import csv
+"""compute every passway's center grid"""
 center = {}
 entity = np.genfromtxt ('data/entitymap.datx', dtype=np.int32)
 width, height = entity.shape

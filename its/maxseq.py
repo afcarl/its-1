@@ -28,7 +28,7 @@ def gen_path (start, end):
     path.append (start)
     return path
 
-if __name__ == '__main__':
+def run ():
     start = int (sys.argv[1])
     end = int (sys.argv[2])
     reader = csv.reader (sys.stdin)
@@ -36,4 +36,19 @@ if __name__ == '__main__':
     for row in reader:
         TRANS[int(row[0]), int(row[1]), int(row[2])] = float (row[3])
     writer.writerow (gen_path (start, end))
+
+def test ():
+    tranfile = open (sys.argv[1])
+    reader = csv.reader (tranfile)
+    for row in reader:
+        TRANS[int(row[0]), int(row[1]), int(row[2])] = float (row[3])
+
+    writer = csv.writer (sys.stdout)
+    tfile = open (sys.argv[2])
+    reader = csv.reader(tfile)
+    for row in reader:
+        writer.writerow (gen_path (int (row[0]), int (row[-1])))
+
+if __name__ == '__main__':
+    test ()
 

@@ -3,7 +3,7 @@
 import csv
 import sys
 from collections import Counter
-
+"""passway cover times"""
 def static_distribution ():
     pswCnt = Counter ()
     reader = csv.reader (sys.stdin)
