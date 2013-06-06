@@ -5,16 +5,18 @@ from direction import direction, center
 def gen_path (start, end, TRANS):
     prob = [0] * 8000
     prev = [0] * 8000
+    markov = {}
     prob[start] = 1.0
     prev[start] = 0
     change = True
+    for tran, p in TRANS.items ():
+        d, a, b = tran
+        if direction (center[a], center[end]) == d:
+            markov[a, b] = p
     while change:
         change = False
-        for tran, p in TRANS.items ():
-            d, a, b = tran
-            if direction (center[a], center[end]) != d:
-                #print direction (center[a], center[end]), d
-                continue
+        for tran, p in markov.items ():
+            a, b = tran
             if prob[b] < prob[a] * p:
                 prob[b] = prob[a] * p
                 prev[b] = a

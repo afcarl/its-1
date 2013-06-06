@@ -1,29 +1,46 @@
+#! /usr/bin/python
+
 import numpy as np
 import sys
-import mark
-
-def shadowmark (entity):
+WAIT = 0
+def markshadow (entity):
     shadow = np.array (entity)
     width, height = entity.shape
-    for x in range (1, width):
-        for y in range (1, height):
-            if entity[x, y] == 0:
+    for x in range(1, width - 1):
+        for y in range(1, height - 1):
+            if entity[x, y] == 0 or entity[x, y] > 10000:
                 continue
             for i in range (x - 1, x + 2):
                 for j in range (y - 1, y + 2):
-                    if entity[i, j] == mark.TURN:
-                        for k in range (i - 1, i+2):
-                            for m in range (j - 1, j + 2):
-                                shadow[k, m] = mark.TURN
-                    elif shadow[i,j] == 0:
-                        shadow[i,j] = entity[x,y]
-                    elif entity[i,j] == 0 and shadow[i,j] != entity[x,y]:
-                        shadow[i,j] = mark.IGNORE
-
+                    #if entity [i,j] > 0:
+                    #    continue
+                    if shadow [i,j] == 0 or entity[i, j] > 10000:
+                        shadow[i, j] = entity[x,y]
+                    elif shadow[i,j] == entity[x,y]:
+                        continue
+                    else:
+                        shadow[i, j] = WAIT
+    for x in range(1, width - 1):
+        for y in range(1, height - 1):
+            if entity[x, y] <= 10000:
+                continue
+            for i in range (x - 1, x + 2):
+                for j in range (y - 1, y + 2):
+                    if entity [i,j] > 0:
+                        continue
+                    if shadow [i,j] == 0:
+                        shadow[i, j] = entity[x,y]
+                    elif shadow[i,j] < 10000:
+                        continue
+                    elif shadow[i,j] == entity[i, j]:
+                        continue
+                    else:
+                        shadow[i, j] = WAIT
     return shadow
 
 if __name__ == '__main__':
-    entity = np.genfromtxt (sys.stdin, dtype = np.int32)
-    shadow = shadowmark (entity)
-    np.savetxt (sys.stdout, shadow, fmt='%d')
+    entity = np.genfromtxt (sys.argv[1])
+    entitymap = markshadow (entity)
+    np.savetxt (sys.stdout, entitymap, fmt = '%d')
+
 

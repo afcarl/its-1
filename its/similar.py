@@ -9,10 +9,10 @@ pcnt = Counter ()
 treader = csv.reader (tfile)
 preader = csv.reader (pfile)
 for row in treader:
-    for p in row:
+    for p in row[1:]:
         tcnt[int(p)] += 1
 for row in preader:
-    for p in row:
+    for p in row[1:]:
         pcnt[int(p)] += 1
 
 print 'len_t:', len (tcnt)

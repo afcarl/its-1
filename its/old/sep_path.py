@@ -1,6 +1,7 @@
 import direction
 import csv
 import sys
+""" seperate path data by direction"""
 reader = csv.reader (sys.stdin)
 writer = [None] * 8
 for i  in range (1, 9):

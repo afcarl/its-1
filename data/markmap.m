@@ -18,11 +18,11 @@ end
 road = (neighbor == 2) + (neighbor == 1);
 intersection = (neighbor > 0) - road;
 close all;
-imshow (thin);
-figure, imshow (road);
+showmap (thin, 'road');
+showmap (road, 'passway');
 ccroad = bwconncomp (road);
 disp (ccroad);
-figure, imshow(intersection);
+showmap (intersection, 'intersection');
 ccinter = bwconncomp (intersection);
 disp (ccinter);
 

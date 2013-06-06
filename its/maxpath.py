@@ -3,28 +3,46 @@ import sys
 from direction import direction, center
 
 def gen_path (start, end, TRANS):
-    prob = [0] * 8000
-    prev = [0] * 8000
+    N = 5000
+    prob = [0] * N
+    prev = [0] * N
+    Q = set ()
+    adj = [[]] * N
     prob[start] = 1.0
     prev[start] = 0
-    change = True
-    while change:
-        change = False
-        for tran, p in TRANS.items ():
-            d, a, b = tran
-            if direction (center[a], center[end]) != d:
-                #print direction (center[a], center[end]), d
-                continue
-            if prob[b] < prob[a] * p:
-                prob[b] = prob[a] * p
-                prev[b] = a
-                change = True
-    pr = prev[end]
-    path = [end]
+    for tran, p in TRANS.items ():
+        d, a, b = tran
+        if direction (center[a], center[end]) == d:
+            Q.add (a)
+            Q.add (b)
+            adj[a].append ((b, p))
+    #change = True
 
-    while pr != start and pr != 0:
+    while len(Q) > 0:
+        #change = False
+        maxv = 0
+        maxp = 0
+        for v in Q:
+            if prob[v] >= maxp:
+                maxv = v
+                maxp = p
+        Q.remove (maxv)
+        for n, p in adj[maxv]:
+            if prob[maxv] * p >= prob[n]:
+                prob[n] = prob[maxv] * p
+                prev[n] = maxv
+                #change = True
+
+    path = [end]
+    pr = prev[end]
+    print pr
+    while pr != start:
+        print pr
+        if pr == 0:
+            print >> sys.stderr, 'zero'
+            break
         path.append (pr)
-        pr = prev[pr]
+        pr = prev[n]
     path.append (start)
     path.append (prob[end])
     path.reverse ()
@@ -57,5 +75,4 @@ def test ():
         writer.writerow (gen_path (int (row[5]), int (row[-1]), TRANS))
 
 if __name__ == '__main__':
-    test ()
-
+    test()

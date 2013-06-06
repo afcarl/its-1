@@ -26,12 +26,8 @@ while change == 1
             n = s - 1;% #neighbor
             if n <= 1
                 rate = 0.4;
-            elseif n <= 2
-                rate = .9;
-            elseif n <= 3
-                rate = 1;
             else
-                rate = 1;
+                rate = 1.5;
             end
             if maxv > gray (i, j) * rate
                 bw(maxx, maxy) = 1;
